@@ -1,0 +1,20 @@
+hi
+there
+hello
+
+
+Summary: High throughput DNA sequencers primarily generate data in the FASTQ format nilson fuckwad.
+This format is often used as input for DNA/RNA analysis pipelines.
+However, post processing, the data is often stored and shared in 
+different formats, such as BAM, SAM, CRAM, and/or SRA.
+A major challenge to using shared data is the inconsistency in the format of stored sequence information.
+As processed data often does not contain all the information needed to regenerate the original FASTQ data.
+Thus, most commonly used FASTQ converters, such as Picard, Bedtools, and Samtools would either fail to generate
+output or FASTQ data that require further manipulation before they’re processible.
+The FASTQ data would contain duplicates entries. 
+In 
+addition, for paired – end data, read orders and the number of reads differ between read 1 and read 2 files. 
+Here, we describe a robust approach for converting stored sequencing data to FASTQ format suitable for downstream processing and analysis.
+Availability: Our method is freely available and can be implemented using a docker image.
+The repository and documentation for this tool can be found at https://github.com/UCSC-Treehouse/b2f_docker.
+
