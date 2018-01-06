@@ -6,7 +6,7 @@
 /*   By: linh <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/29 21:50:47 by linh              #+#    #+#             */
-/*   Updated: 2018/01/01 11:47:38 by lilam            ###   ########.fr       */
+/*   Updated: 2018/01/06 02:42:01 by linh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static char	*locate_newline(char *str)
 		i--;
 	}
 	return (new);
-	free(str);
 }
 
 static int	cal_newline(char *str)
@@ -62,50 +61,55 @@ int			get_next_line(const int fd, char **line)
 	char *tmp;
 
 	int j;
-	
+
 	j = 0;
 	if (fd < 0)
 		return (-1);
+	if (!line)
+		return (-1);
 	if (!fd_s[fd])
-		fd_s[fd] = "\0";
-//	printf("%d\n", cal_newline(fd_s[fd]));
-//	printf("%d\n", ft_strlen(fd_s[fd]));
-	while (cal_newline(fd_s[fd]) == 0 && (ret = read(fd, buf, BUFF_SIZE)))
+		fd_s[fd] = ft_strnew(0);
+	while (!ft_strchr(fd_s[fd], '\n') && (ret = read(fd, buf, BUFF_SIZE)))
 	{
-//		puts("hi");
-//		printf("%d\n", ret);
 		if (ret < 0)
 			return (-1);
-		buf[ret] = '\0';	
+		buf[ret] = '\0';
 		while (j < ret)
 		{
 			if (buf[j] == '\n')
-			{	
+			{
 				tmp = fd_s[fd];
 				fd_s[fd] = ft_strjoin(tmp, buf);
+				free(tmp);
 				*line = locate_newline(fd_s[fd]);
-				fd_s[fd] = (ft_strchr(fd_s[fd], '\n') + 1);
+				tmp = fd_s[fd];
+				fd_s[fd] = ft_strdup((ft_strchr(fd_s[fd], '\n') + 1));
+				free(tmp);
 				return (1);
 			}
 			j++;
 		}
-//		tmp = fd_s[fd];
-	 	fd_s[fd] = ft_strjoin(fd_s[fd], buf);
-		free(fd_s[fd]);
+		tmp = fd_s[fd];
+		fd_s[fd] = ft_strjoin(tmp, buf);
+		free(tmp);
 		j = 0;
 	}
 	if (cal_newline(fd_s[fd]) > 0)
 	{
 		*line = locate_newline(fd_s[fd]);
-		fd_s[fd] = (ft_strchr(fd_s[fd], '\n') + 1);
+		tmp = fd_s[fd];
+		fd_s[fd] = ft_strdup((ft_strchr(fd_s[fd], '\n') + 1));
+		free(tmp);
 		return (1);
 	}
-//	printf("%d\n", ft_strlen(fd_s[fd]));
 	if (ft_strlen(fd_s[fd]) > 0)
 	{
 		*line = locate_newline(fd_s[fd]);
-		fd_s[fd] = "\0";
+		free(fd_s[fd]);
+		fd_s[fd] = ft_strnew(0);
 		return (1);
 	}
+	ft_memdel((void**)&fd_s[fd]);
+//	puts(fd_s[fd]);
 	return (0);
 }
